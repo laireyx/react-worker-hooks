@@ -1,0 +1,46 @@
+{
+  "name": "react-worker-hooks",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "build": "tsc && vite build"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/common/index.mjs",
+      "require": "./dist/common/index.js",
+      "types": "./dist/common/index.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/browser/index.mjs",
+      "require": "./dist/browser/index.js",
+      "types": "./dist/browser/index.d.ts"
+    },
+    "./worker": {
+      "import": "./dist/worker/index.mjs",
+      "require": "./dist/worker/index.js",
+      "types": "./dist/worker/index.d.ts"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^20.8.9",
+    "@types/react": "^18.2.33",
+    "@typescript-eslint/eslint-plugin": "^6.9.0",
+    "@typescript-eslint/parser": "^6.9.0",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-import-resolver-typescript": "^3.6.1",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.4.5",
+    "vite-plugin-dts": "^3.6.2"
+  },
+  "dependencies": {
+    "react": "^18.2.0"
+  }
+}
