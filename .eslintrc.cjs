@@ -4,7 +4,6 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended-type-checked',
-    'plugin:react-hooks/recommended',
     'plugin:import/typescript',
     'plugin:import/recommended',
     'plugin:prettier/recommended',
@@ -28,13 +27,7 @@ module.exports = {
           ['sibling', 'parent', 'index'],
           'unknown',
         ],
-        pathGroups: [
-          {
-            pattern: '{react*,react*/**}',
-            group: 'external',
-            position: 'before',
-          },
-        ],
+        pathGroups: [],
         pathGroupsExcludedImportTypes: [],
 
         alphabetize: {
