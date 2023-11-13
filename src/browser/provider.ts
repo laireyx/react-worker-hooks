@@ -1,15 +1,13 @@
-import { useState } from 'react';
-
 import { BrowserBridge } from '.';
 import { EventMap } from '../types';
 
-export function useWorker<M extends EventMap>(
+export function startWorker<M extends EventMap>(
   scriptURL: string | URL,
   options: WorkerOptions = { type: 'module' },
 ) {
-  const [workerBridge] = useState<BrowserBridge<M>>(
-    new BrowserBridge(scriptURL, options),
-  );
+  const workerBridge = new BrowserBridge<M>(scriptURL, options);
 
-  return workerBridge;
+  return function useWorker() {
+    return workerBridge;
+  };
 }
