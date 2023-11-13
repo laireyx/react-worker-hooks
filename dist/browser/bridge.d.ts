@@ -4,6 +4,6 @@ export declare class BrowserBridge<M extends EventMap> {
     private eventSeq;
     private pendingTasks;
     constructor(scriptURL: string | URL, options?: WorkerOptions);
-    task: <E extends keyof M | (string & {})>(eventType: E, ...args: Parameters<M[E]>) => Promise<Awaited<ReturnType<M[E]>>>;
+    task: <E extends keyof M>(eventType: E, ...args: Parameters<M[E]>) => Promise<Awaited<ReturnType<M[E]>>>;
     private handleResponse;
 }
