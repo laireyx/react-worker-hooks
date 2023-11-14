@@ -23,8 +23,9 @@ export class BrowserBridge<M extends EventMap> {
     );
   }
 
-  task = <E extends keyof M>(
+  taskWithTransferable = <E extends keyof M>(
     eventType: E,
+    transfer: Transferable[],
     ...args: Parameters<M[E]>
   ): Promise<Awaited<ReturnType<M[E]>>> => {
     const eventSeq = this.eventSeq++;
@@ -52,10 +53,16 @@ export class BrowserBridge<M extends EventMap> {
       args,
     };
 
-    this.worker.postMessage(request);
+    this.worker.postMessage(request, transfer);
 
     return taskPromise;
   };
+
+  task = <E extends keyof M>(
+    eventType: E,
+    ...args: Parameters<M[E]>
+  ): Promise<Awaited<ReturnType<M[E]>>> =>
+    this.taskWithTransferable(eventType, [], ...args);
 
   private handleResponse = (ev: MessageEvent<WorkerResponse<M, keyof M>>) => {
     const { data } = ev;
