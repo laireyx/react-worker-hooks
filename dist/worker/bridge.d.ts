@@ -1,5 +1,5 @@
-import { EventMap } from '../types';
-export declare class WorkerBridge<M extends EventMap> {
+import { BareMap, EventMap } from '../types';
+export declare class WorkerBridge<M extends BareMap = EventMap> {
     private handlers;
     constructor();
     private handleRequest;

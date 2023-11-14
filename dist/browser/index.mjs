@@ -1,53 +1,54 @@
-var l = Object.defineProperty;
-var w = (t, r, e) => r in t ? l(t, r, { enumerable: !0, configurable: !0, writable: !0, value: e }) : t[r] = e;
-var n = (t, r, e) => (w(t, typeof r != "symbol" ? r + "" : r, e), e);
-function h(t, r = { type: "module" }) {
-  const e = new k(t, r);
+var k = Object.defineProperty;
+var h = (r, s, e) => s in r ? k(r, s, { enumerable: !0, configurable: !0, writable: !0, value: e }) : r[s] = e;
+var n = (r, s, e) => (h(r, typeof s != "symbol" ? s + "" : s, e), e);
+function u(r, s = { type: "module" }) {
+  const e = new w(r, s);
   return function() {
     return e;
   };
 }
-class k {
-  constructor(r, e = { type: "module" }) {
+class w {
+  constructor(s, e = { type: "module" }) {
     n(this, "worker");
     n(this, "eventSeq", 0);
     n(this, "pendingTasks", /* @__PURE__ */ new Map());
-    n(this, "task", (r, ...e) => {
-      const s = this.eventSeq++, o = {
+    n(this, "taskWithTransferable", (s, e, ...t) => {
+      const o = this.eventSeq++, a = {
         resolve: () => {
           throw new Error("Placeholder not replaced");
         },
         reject: () => {
           throw new Error("Placeholder not replaced");
         }
-      }, a = new Promise(
-        (c, d) => {
-          Object.assign(o, { resolve: c, reject: d });
+      }, i = new Promise(
+        (d, l) => {
+          Object.assign(a, { resolve: d, reject: l });
         }
       );
-      this.pendingTasks.set(s, o);
-      const i = {
-        eventType: r,
-        eventSeq: s,
-        args: e
+      this.pendingTasks.set(o, a);
+      const c = {
+        eventType: s,
+        eventSeq: o,
+        args: t
       };
-      return this.worker.postMessage(i), a;
+      return this.worker.postMessage(c, e), i;
     });
-    n(this, "handleResponse", (r) => {
-      const { data: e } = r, s = this.pendingTasks.get(e.eventSeq);
-      if (!s)
+    n(this, "task", (s, ...e) => this.taskWithTransferable(s, [], ...e));
+    n(this, "handleResponse", (s) => {
+      const { data: e } = s, t = this.pendingTasks.get(e.eventSeq);
+      if (!t)
         throw new Error(
           `Invalid worker response: pending task with seq #${e.eventSeq} not found`
         );
-      e.result.success ? s.resolve(e.result.response) : s.reject(e.result.reason);
+      e.result.success ? t.resolve(e.result.response) : t.reject(e.result.reason);
     });
-    this.worker = new Worker(r, e), this.worker.addEventListener(
+    this.worker = new Worker(s, e), this.worker.addEventListener(
       "message",
-      (s) => this.handleResponse(s)
+      (t) => this.handleResponse(t)
     );
   }
 }
 export {
-  k as BrowserBridge,
-  h as startWorker
+  w as BrowserBridge,
+  u as startWorker
 };

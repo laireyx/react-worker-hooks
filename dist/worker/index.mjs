@@ -17,7 +17,7 @@ class i {
           eventSeq: o,
           result: {
             success: !0,
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+            // eslint-disable-next-line @typescript-eslint/await-thenable
             response: await n(...c)
           }
         };
