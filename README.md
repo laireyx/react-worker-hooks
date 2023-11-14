@@ -7,9 +7,7 @@ Use Web Worker in React
 Write an event map(common/event.ts):
 
 ```typescript
-import { EventMap } from 'react-worker-hooks';
-
-export class WorkerEvents extends EventMap {
+export interface WorkerEvents {
   ping(msg: string): string;
 }
 ```

@@ -1,4 +1,4 @@
-import { EventMap, WorkerRequest, WorkerResponse } from '../types';
+import { BareMap, EventMap, WorkerRequest, WorkerResponse } from '../types';
 
 type PendingTask<M extends EventMap, E extends keyof M> = {
   resolve: (value: Awaited<ReturnType<M[E]>>) => void;
@@ -6,7 +6,7 @@ type PendingTask<M extends EventMap, E extends keyof M> = {
   reject: (reason?: any) => void;
 };
 
-export class BrowserBridge<M extends EventMap> {
+export class BrowserBridge<M extends BareMap = EventMap> {
   worker: Worker;
 
   private eventSeq = 0;

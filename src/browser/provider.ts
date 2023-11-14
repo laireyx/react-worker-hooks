@@ -1,7 +1,7 @@
 import { BrowserBridge } from '.';
-import { EventMap } from '../types';
+import { BareMap, EventMap } from '../types';
 
-export function startWorker<M extends EventMap>(
+export function startWorker<M extends BareMap = EventMap>(
   scriptURL: string | URL,
   options: WorkerOptions = { type: 'module' },
 ) {

@@ -8,7 +8,6 @@ export default defineConfig({
     lib: {
       // Could also be a dictionary or array of multiple entry points
       entry: {
-        common: resolve(__dirname, 'src/common/index.ts'),
         browser: resolve(__dirname, 'src/browser/index.ts'),
         worker: resolve(__dirname, 'src/worker/index.ts'),
       },
