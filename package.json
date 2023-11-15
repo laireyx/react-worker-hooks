@@ -2,6 +2,7 @@
   "name": "react-worker-hooks",
   "version": "0.1.3",
   "type": "module",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/laireyx/react-worker-hooks.git"
