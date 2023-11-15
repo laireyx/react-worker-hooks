@@ -5,7 +5,6 @@ export declare class WorkerInstance<M extends BareMap = EventMap> {
     private eventSeq;
     private pendingTasks;
     constructor(scriptURL: string | URL, options?: WorkerOptions);
-    private assertOnline;
     taskWithTransferable: <E extends keyof M>(eventType: E, transfer: Transferable[], ...args: Parameters<M[E]>) => Promise<Awaited<ReturnType<M[E]>>>;
     task: <E extends keyof M>(eventType: E, ...args: Parameters<M[E]>) => Promise<Awaited<ReturnType<M[E]>>>;
     private handleResponse;
