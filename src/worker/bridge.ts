@@ -20,10 +20,7 @@ export class WorkerBridge<M extends BareMap = EventMap> {
       const handler:
         | ((...args: Parameters<M[keyof M]>) => ReturnType<M[keyof M]>)
         | undefined = this.handlers.get(eventType);
-      if (!handler)
-        throw new TypeError(
-          `Invalid event type: ${String(eventType)} does not have any handler`,
-        );
+      if (!handler) return;
 
       const successResponse: WorkerResponse<M, keyof M> = {
         eventType,
