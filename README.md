@@ -68,7 +68,7 @@ Use [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_AP
 
 These methods are available via `react-worker-hooks/browser`
 
-By passing an interface `EventMap`, you can get type hints while writing browser code.
+You can get type hints while writing browser code by passing an interface `EventMap`.
 
 - `startWorker<EventMap>(scriptURL, options)`
   Start a single worker instance, and return a getter function of the worker instance.
@@ -120,7 +120,7 @@ These methods are available via `react-worker-hooks/browser`
 
 These methods are available via `react-worker-hooks/worker`
 
-By passing an interface `EventMap`, you can get type hints while writing worker code.
+You can get type hints while writing browser code by passing an interface `EventMap`.
 
 - `new WorkerBridge<EventMap>()`
   Initialize worker bridge.
@@ -130,3 +130,14 @@ By passing an interface `EventMap`, you can get type hints while writing worker 
 - `.on(eventType, handler)`
   Register a handler for `eventType`. The return value of the handler will be passed back to the `WorkerInstance.task()` or `WorkerInstance.taskWithTransferable()`.
   As mentioned above, If multiple handlers are registered on a single event, all of those listeners will be called and the return values are discarded except the first arrived one.
+
+- `.onTransfer(eventType, handler)`
+  Register a handler for `eventType`. The return value of the handler will be passed back to the `WorkerInstance.task()` or `WorkerInstance.taskWithTransferable()`.
+  The difference between `WorkerBridge.on()` and this method is the return type. this method should wrap value with `WrapTransferable` before return. `WorkerBridge` will transfer objects instead of copying them.
+
+## WrapTransferable(Worker)
+
+These methods are available via `react-worker-hooks/worker`
+
+- `new WrapTransferable<T>(response, transfer)`
+  Wrap handler response and mark which object(s) are transferable.
