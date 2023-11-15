@@ -9,6 +9,8 @@ type PendingTask<M extends EventMap, E extends keyof M> = {
 export class BrowserBridge<M extends BareMap = EventMap> {
   private worker: Worker;
 
+  private terminated = false;
+
   private eventSeq = 0;
   private pendingTasks = new Map<number, PendingTask<M, keyof M>>();
 
@@ -23,11 +25,23 @@ export class BrowserBridge<M extends BareMap = EventMap> {
     );
   }
 
+  private assertOnline(msg: string) {
+    if (this.terminated) {
+      throw new Error(msg);
+    }
+
+    return this;
+  }
+
   taskWithTransferable = <E extends keyof M>(
     eventType: E,
     transfer: Transferable[],
     ...args: Parameters<M[E]>
   ): Promise<Awaited<ReturnType<M[E]>>> => {
+    this.assertOnline(
+      `Cannot start a new task: this worker is already terminated`,
+    );
+
     const eventSeq = this.eventSeq++;
 
     const taskItem: PendingTask<M, E> = {
@@ -79,4 +93,13 @@ export class BrowserBridge<M extends BareMap = EventMap> {
       pendingTask.reject(data.result.reason);
     }
   };
+
+  terminate() {
+    this.assertOnline(
+      `Cannot terminate this worker: this worker is already terminated`,
+    );
+
+    this.worker.terminate();
+    this.terminated = true;
+  }
 }
