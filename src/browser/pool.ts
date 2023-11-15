@@ -49,17 +49,6 @@ export class WorkerPool<M extends BareMap> {
     return selectedPool;
   };
 
-  taskWithTransferable = <E extends keyof M>(
-    eventType: E,
-    transfer: Transferable[],
-    ...args: Parameters<M[E]>
-  ) =>
-    this.assertOnline(
-      `Cannot start a new task: this pool is already terminated`,
-    ).workers.map((worker) =>
-      worker.taskWithTransferable(eventType, transfer, ...args),
-    );
-
   task = <E extends keyof M>(eventType: E, ...args: Parameters<M[E]>) =>
     this.assertOnline(
       `Cannot start a new task: this pool is already terminated`,
