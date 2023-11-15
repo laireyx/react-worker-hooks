@@ -25,52 +25,35 @@ export class WorkerInstance<M extends BareMap = EventMap> {
     );
   }
 
-  private assertOnline(msg: string) {
-    if (this.terminated) {
-      throw new Error(msg);
-    }
-
-    return this;
-  }
-
   taskWithTransferable = <E extends keyof M>(
     eventType: E,
     transfer: Transferable[],
     ...args: Parameters<M[E]>
-  ): Promise<Awaited<ReturnType<M[E]>>> => {
-    this.assertOnline(
-      `Cannot start a new task: this worker is already terminated`,
-    );
+  ): Promise<Awaited<ReturnType<M[E]>>> =>
+    new Promise<Awaited<ReturnType<M[E]>>>((resolve, reject) => {
+      if (this.terminated) {
+        return reject(
+          new Error(
+            `Cannot start a new task: this worker is already terminated`,
+          ),
+        );
+      }
 
-    const eventSeq = this.eventSeq++;
+      const eventSeq = this.eventSeq++;
 
-    const taskItem: PendingTask<M, E> = {
-      resolve: () => {
-        throw new Error('Placeholder not replaced');
-      },
-      reject: () => {
-        throw new Error('Placeholder not replaced');
-      },
-    };
+      this.pendingTasks.set(eventSeq, {
+        resolve,
+        reject,
+      });
 
-    const taskPromise = new Promise<Awaited<ReturnType<M[E]>>>(
-      (resolve, reject) => {
-        Object.assign(taskItem, { resolve, reject });
-      },
-    );
+      const request: WorkerRequest<M, E> = {
+        eventType,
+        eventSeq,
+        args,
+      };
 
-    this.pendingTasks.set(eventSeq, taskItem);
-
-    const request: WorkerRequest<M, E> = {
-      eventType,
-      eventSeq,
-      args,
-    };
-
-    this.worker.postMessage(request, transfer);
-
-    return taskPromise;
-  };
+      this.worker.postMessage(request, transfer);
+    });
 
   task = <E extends keyof M>(
     eventType: E,
@@ -95,9 +78,10 @@ export class WorkerInstance<M extends BareMap = EventMap> {
   };
 
   terminate() {
-    this.assertOnline(
-      `Cannot terminate this worker: this worker is already terminated`,
-    );
+    if (this.terminated)
+      throw new Error(
+        `Cannot terminate this worker: this worker is already terminated`,
+      );
 
     this.worker.terminate();
     this.terminated = true;
