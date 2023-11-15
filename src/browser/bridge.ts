@@ -7,7 +7,7 @@ type PendingTask<M extends EventMap, E extends keyof M> = {
 };
 
 export class BrowserBridge<M extends BareMap = EventMap> {
-  worker: Worker;
+  private worker: Worker;
 
   private eventSeq = 0;
   private pendingTasks = new Map<number, PendingTask<M, keyof M>>();
