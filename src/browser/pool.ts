@@ -1,4 +1,4 @@
-import { WorkerInstance } from '.';
+import { WorkerInstance } from './instance';
 import { BareMap } from '../types';
 
 export class WorkerPool<M extends BareMap> {

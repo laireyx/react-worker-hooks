@@ -1,4 +1,4 @@
-import { WorkerInstance } from '.';
+import { WorkerInstance } from './instance';
 import { WorkerPool } from './pool';
 import { BareMap, EventMap } from '../types';
 
