@@ -1,15 +1,15 @@
-import { BrowserBridge } from '.';
-import { BridgePool } from './pool';
+import { WorkerInstance } from '.';
+import { WorkerPool } from './pool';
 import { BareMap, EventMap } from '../types';
 
 export function startWorker<M extends BareMap = EventMap>(
   scriptURL: string | URL,
   options: WorkerOptions = { type: 'module' },
 ) {
-  const workerBridge = new BrowserBridge<M>(scriptURL, options);
+  const browserBridge = new WorkerInstance<M>(scriptURL, options);
 
   return function useWorker() {
-    return workerBridge;
+    return browserBridge;
   };
 }
 
@@ -20,10 +20,10 @@ export function startWorkerPool<M extends BareMap = EventMap>(
 ) {
   const workers = [];
   for (let i = 0; i < poolSize; i++) {
-    workers.push(new BrowserBridge<M>(scriptURL, options));
+    workers.push(new WorkerInstance<M>(scriptURL, options));
   }
 
-  const bridgePool = new BridgePool(workers);
+  const bridgePool = new WorkerPool(workers);
 
   return function useWorker() {
     return bridgePool;

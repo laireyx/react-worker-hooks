@@ -1,13 +1,13 @@
-import { BrowserBridge } from '.';
+import { WorkerInstance } from '.';
 import { BareMap } from '../types';
 
-export class BridgePool<M extends BareMap> {
+export class WorkerPool<M extends BareMap> {
   private lastWorkerIndex = 0;
   private _terminated = false;
 
   constructor(
-    private workers: BrowserBridge<M>[],
-    private parent: BridgePool<M> | null = null,
+    private workers: WorkerInstance<M>[],
+    private parent: WorkerPool<M> | null = null,
   ) {}
 
   private get terminated(): boolean {
@@ -37,7 +37,7 @@ export class BridgePool<M extends BareMap> {
       `Cannot assign a new task: this pool is already terminated`,
     );
 
-    const selectedPool = new BridgePool(
+    const selectedPool = new WorkerPool(
       this.workers
         .concat(this.workers)
         .slice(this.lastWorkerIndex, this.lastWorkerIndex + count),

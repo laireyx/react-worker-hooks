@@ -6,7 +6,7 @@ type PendingTask<M extends EventMap, E extends keyof M> = {
   reject: (reason?: any) => void;
 };
 
-export class BrowserBridge<M extends BareMap = EventMap> {
+export class WorkerInstance<M extends BareMap = EventMap> {
   private worker: Worker;
 
   private terminated = false;
