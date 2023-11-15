@@ -27,15 +27,15 @@ export class WorkerPool<M extends BareMap> {
   }
 
   assign = (count: number) => {
+    this.assertOnline(
+      `Cannot assign a new task: this pool is already terminated`,
+    );
+
     if (count > this.workers.length) {
       throw new RangeError(
         `Cannot select ${count} workers: This pool has only ${this.workers.length} workers.`,
       );
     }
-
-    this.assertOnline(
-      `Cannot assign a new task: this pool is already terminated`,
-    );
 
     const selectedPool = new WorkerPool(
       this.workers
