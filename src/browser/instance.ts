@@ -65,16 +65,15 @@ export class WorkerInstance<M extends BareMap = EventMap> {
     const { data } = ev;
 
     const pendingTask = this.pendingTasks.get(data.eventSeq);
-    if (!pendingTask)
-      throw new Error(
-        `Invalid worker response: pending task with seq #${data.eventSeq} not found`,
-      );
+    if (!pendingTask) return;
 
     if (data.result.success) {
       pendingTask.resolve(data.result.response);
     } else {
       pendingTask.reject(data.result.reason);
     }
+
+    this.pendingTasks.delete(data.eventSeq);
   };
 
   terminate() {
