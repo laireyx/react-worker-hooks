@@ -86,6 +86,10 @@ You can get type hints while writing browser code by passing an interface `Event
 
 These methods are available via `react-worker-hooks/browser`
 
+- `.pendingTaskCount`
+
+  Get the number of pending tasks of this worker instance.
+
 - `.taskWithTransferable(eventType, transfer, ...args)`
 
   Start a task with the given `eventType`. `args` are passed to the worker context. Use `transfer` to pass [transferable object](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Transferable_objects) via [`postMessage`](https://developer.mozilla.org/en-US/docs/Web/API/Worker/postMessage).
@@ -109,6 +113,15 @@ These methods are available via `react-worker-hooks/browser`
 - `.size`
 
   Get the number of worker instances in this worker pool.
+
+- `.scheduler(option)`
+
+  Set scheduler policy. This policy will determine which worker(s) will be assigned via `WorkerPool.assign()`.
+
+  - `option.method: 'rotate' | 'idleFirst'`
+
+    `rotate` assigns every workers sequentially. After all the workers are assigned, it will go back to the first worker and repeat.
+    `idleFirst` assigns workers in ascending order of the pending task count.
 
 - `.assign(count)`
 
