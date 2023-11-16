@@ -1,12 +1,18 @@
 {
   "name": "react-worker-hooks",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/laireyx/react-worker-hooks.git"
   },
+  "keywords": [
+    "react",
+    "worker",
+    "web-worker",
+    "web worker"
+  ],
   "scripts": {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
