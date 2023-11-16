@@ -25,6 +25,10 @@ export class WorkerInstance<M extends BareMap = EventMap> {
     );
   }
 
+  get pendingTaskCount() {
+    return this.pendingTasks.size;
+  }
+
   taskWithTransferable = <E extends keyof M>(
     eventType: E,
     transfer: Transferable[],

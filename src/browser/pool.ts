@@ -1,9 +1,15 @@
 import { WorkerInstance } from './instance';
 import { BareMap } from '../types';
 
+type SchedulerOption = {
+  method: 'rotate' | 'idleFirst';
+};
+
 export class WorkerPool<M extends BareMap> {
   private lastWorkerIndex = 0;
   private _terminated = false;
+
+  private method: SchedulerOption['method'] = 'rotate';
 
   constructor(
     private workers: WorkerInstance<M>[],
@@ -26,6 +32,12 @@ export class WorkerPool<M extends BareMap> {
     return this.workers.length;
   }
 
+  scheduler(option: SchedulerOption) {
+    this.method = option.method ?? this.method;
+
+    return this;
+  }
+
   assign = (count: number) => {
     this.assertOnline(
       `Cannot assign a new task: this pool is already terminated`,
@@ -37,16 +49,26 @@ export class WorkerPool<M extends BareMap> {
       );
     }
 
-    const selectedPool = new WorkerPool(
-      this.workers
-        .concat(this.workers)
-        .slice(this.lastWorkerIndex, this.lastWorkerIndex + count),
-      this,
-    );
+    switch (this.method) {
+      case 'rotate': {
+        const selectedPool = new WorkerPool(
+          this.workers
+            .concat(this.workers)
+            .slice(this.lastWorkerIndex, this.lastWorkerIndex + count),
+          this,
+        );
 
-    this.lastWorkerIndex = (this.lastWorkerIndex + count) % this.workers.length;
+        this.lastWorkerIndex =
+          (this.lastWorkerIndex + count) % this.workers.length;
 
-    return selectedPool;
+        return selectedPool;
+      }
+      case 'idleFirst': {
+        this.workers.sort((a, b) => a.pendingTaskCount - b.pendingTaskCount);
+
+        return new WorkerPool(this.workers.slice(0, count), this);
+      }
+    }
   };
 
   task = <E extends keyof M>(eventType: E, ...args: Parameters<M[E]>) =>
