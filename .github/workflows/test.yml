@@ -40,4 +40,4 @@ jobs:
         run: npm run build
 
       - name: Run test
-        run: CHROMIUM_BIN=$(which chrome) npm test
+        run: CHROME_BINARY=$(which chrome) npm test
