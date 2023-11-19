@@ -16,6 +16,7 @@
   "scripts": {
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
+    "test": "npm run test:scenario",
     "test:unit": "jest '(/test/.*\\.test)\\.ts$'",
     "test:scenario": "jest --config ./test/jest-scenario.json --runInBand",
     "build": "tsc && vite build"

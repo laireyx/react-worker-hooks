@@ -1,6 +1,7 @@
 jest.dontMock('selenium-webdriver');
 
 import path from 'node:path';
+import process from 'node:process';
 
 import {
   Browser,
@@ -18,11 +19,16 @@ describe('Simple worker test', () => {
     driver = await new Builder()
       .forBrowser(Browser.CHROME)
       .setChromeOptions(
-        new chrome.Options().addArguments('--disable-web-security'),
+        new chrome.Options()
+          .setChromeBinaryPath(process.env.CHROME_BINARY ?? '')
+          .addArguments('--headless')
+          .addArguments('--no-sandbox')
+          .addArguments('--disable-dev-shm-usage')
+          .addArguments('--disable-web-security'),
       )
       .build();
 
-    await driver.get(path.join(__dirname, 'assets/index.html'));
+    await driver.get('file://' + path.join(__dirname, 'assets/index.html'));
 
     await driver.wait(
       new Condition('script load', () =>
@@ -30,23 +36,31 @@ describe('Simple worker test', () => {
       ),
       2000,
     );
-  });
+  }, 10000);
 
   afterAll(async () => {
     await driver.close();
   });
 
-  it('startWorker() test', () =>
-    expect(
-      driver.executeAsyncScript(
-        `window.test.startWorker().then(arguments[arguments.length - 1]);`,
-      ),
-    ).resolves.toBe(true));
+  it(
+    'startWorker() test',
+    () =>
+      expect(
+        driver.executeAsyncScript(
+          `window.test.startWorker().then(arguments[arguments.length - 1]);`,
+        ),
+      ).resolves.toBe(true),
+    10000,
+  );
 
-  it('Simple ping-pong test', () =>
-    expect(
-      driver.executeAsyncScript(
-        `window.test.ping().then(arguments[arguments.length - 1]);`,
-      ),
-    ).resolves.toBe('pong 123'));
+  it(
+    'Simple ping-pong test',
+    () =>
+      expect(
+        driver.executeAsyncScript(
+          `window.test.ping().then(arguments[arguments.length - 1]);`,
+        ),
+      ).resolves.toBe('pong 123'),
+    10000,
+  );
 });
