@@ -12,7 +12,7 @@ import {
 } from 'selenium-webdriver';
 import chrome from 'selenium-webdriver/chrome';
 
-describe('Simple worker test', () => {
+describe('Worker instance test', () => {
   let driver: WebDriver;
 
   beforeAll(async () => {
@@ -54,13 +54,46 @@ describe('Simple worker test', () => {
   );
 
   it(
-    'Simple ping-pong test',
+    'Ping-pong test',
     () =>
       expect(
         driver.executeAsyncScript(
           `window.test.ping().then(arguments[arguments.length - 1]);`,
         ),
       ).resolves.toBe('pong 123'),
+    10000,
+  );
+
+  it(
+    'Ping-pong test(Transferable-Primitive)',
+    () =>
+      expect(
+        driver.executeAsyncScript(
+          `window.test.pingTransferable().then(arguments[arguments.length - 1]);`,
+        ),
+      ).resolves.toBe(true),
+    10000,
+  );
+
+  it(
+    'Ping-pong test(Primitive-Tranferable)',
+    () =>
+      expect(
+        driver.executeAsyncScript(
+          `window.test.pongTransferable().then(arguments[arguments.length - 1]);`,
+        ),
+      ).resolves.toBe(true),
+    10000,
+  );
+
+  it(
+    'Ping-pong test(Tranferable-Tranferable)',
+    () =>
+      expect(
+        driver.executeAsyncScript(
+          `window.test.pingpongTransferable().then(arguments[arguments.length - 1]);`,
+        ),
+      ).resolves.toBe(true),
     10000,
   );
 });
