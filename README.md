@@ -1,5 +1,7 @@
 # react-worker-hooks
 
+[![Run Test](https://github.com/laireyx/react-worker-hooks/actions/workflows/test.yml/badge.svg)](https://github.com/laireyx/react-worker-hooks/actions/workflows/test.yml)
+
 Use [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API) with(_or without_) [React](https://react.dev/).
 
 # Usage
@@ -154,11 +156,7 @@ You can get type hints while writing browser code by passing an interface `Event
 
   Register a handler for `eventType`. The return value of the handler will be passed back to the `WorkerInstance.task()` or `WorkerInstance.taskWithTransferable()`.
   As mentioned above, If multiple handlers are registered on a single event, all of those listeners will be called and the return values are discarded except the first arrived one.
-
-- `.onTransfer(eventType, handler)`
-
-  Register a handler for `eventType`. The return value of the handler will be passed back to the `WorkerInstance.task()` or `WorkerInstance.taskWithTransferable()`.
-  The difference between `WorkerBridge.on()` and this method is the return type. This method expects handlers to return value wrapped with `WrapTransferable` before return. `WorkerBridge` will transfer objects instead of copying them.
+  If the return value is wrapped with `WrapTransferable`, `WorkerBridge` will transfer object(s) instead of copying them.
 
 ## WrapTransferable(Worker)
 
