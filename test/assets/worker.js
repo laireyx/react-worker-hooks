@@ -25,7 +25,7 @@ bridge.on('pingTransferable', (ab) => {
   return ab.byteLength;
 });
 
-bridge.onTransfer('pongTransferable', () => {
+bridge.on('pongTransferable', () => {
   // Setup data
   const byteLength = 4 * (1 + Math.floor(Math.random() * 64));
   const u8a = new Uint8Array(byteLength);
@@ -37,7 +37,7 @@ bridge.onTransfer('pongTransferable', () => {
   return new WrapTransferable(u8a.buffer, [u8a.buffer]);
 });
 
-bridge.onTransfer('pingpongTransferable', (ab) => {
+bridge.on('pingpongTransferable', (ab) => {
   const u8a = new Uint8Array(ab);
 
   for (let i = 0; i < u8a.length; i++) {
