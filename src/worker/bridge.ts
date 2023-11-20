@@ -71,13 +71,9 @@ export class WorkerBridge<M extends BareMap = EventMap> {
     }
   };
 
-  on = <E extends keyof M>(eventType: E, handler: M[E]) => {
-    this.handlers.set(eventType, handler);
-  };
-
-  onTransfer = <E extends keyof M>(
+  on = <E extends keyof M>(
     eventType: E,
-    handler: TransferHandler<M, E>,
+    handler: M[E] | TransferHandler<M, E>,
   ) => {
     this.handlers.set(eventType, handler);
   };
