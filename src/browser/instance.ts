@@ -7,18 +7,12 @@ type PendingTask<M extends EventMap, E extends keyof M> = {
 };
 
 export class WorkerInstance<M extends BareMap = EventMap> {
-  private worker: Worker;
-
   private terminated = false;
 
   private eventSeq = 0;
   private pendingTasks = new Map<number, PendingTask<M, keyof M>>();
 
-  constructor(
-    scriptURL: string | URL,
-    options: WorkerOptions = { type: 'module' },
-  ) {
-    this.worker = new Worker(scriptURL, options);
+  constructor(private worker: Worker) {
     this.worker.addEventListener(
       'message',
       (ev: MessageEvent<WorkerResponse<M, keyof M>>) => this.handleResponse(ev),

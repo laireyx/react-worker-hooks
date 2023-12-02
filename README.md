@@ -40,8 +40,13 @@ Use [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_AP
    > import { startWorker } from 'react-worker-hooks/browser';
    > import { WorkerEvents } from '../common/event.ts';
    >
-   > export const usePingWorker = startWorker<WorkerEvents>(
-   >   new URL('../worker/worker.ts', import.meta.url),
+   > export const usePingWorker = startWorker<WorkerEvents>('/worker.ts');
+   >
+   > // With vite, you cannot take advantage of resolving module without new Worker().
+   > // In this case, you might want to use connectWorker().
+   > import { connectWorker } from 'react-worker-hooks/browser';
+   > export const usePingWorker = connectWorker<WorkerEvents>(
+   >   new Worker(new URL('../worker/worker.ts', import.meta.url)),
    > );
    > ```
 
@@ -78,11 +83,19 @@ You can get type hints while writing browser code by passing an interface `Event
 
   > Parameters `scriptURL` and `options` are directly passed to [worker constructor](https://developer.mozilla.org/en-US/docs/Web/API/Worker/Worker)(`new Worker()`).
 
+- `connectWorker<EventMap>(worker)`
+
+  Connect to a worker, that uses `WorkerBridge` described below.
+
 - `startWorkerPool<EventMap>(poolSize, scriptURL, options)`
 
   Start a worker pool, and return a getter function of the worker pool.
 
   > Parameters `scriptURL` and `options` are directly passed to [worker constructor](https://developer.mozilla.org/en-US/docs/Web/API/Worker/Worker)(`new Worker()`).
+
+- `connectWorkerPool<EventMap>(workers)`
+
+  Connect to workers, that use `WorkerBridge` described below.
 
 ## WorkerInstance(Browser)
 
